@@ -16,6 +16,7 @@ public abstract class Boot {
 	
 	
 	
+	
 	// constructor
 	public Boot(int number, int leistungBoot,
 			String backBoardRuderVorn,
