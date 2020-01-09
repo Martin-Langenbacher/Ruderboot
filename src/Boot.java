@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public abstract class Boot {
 	
@@ -12,6 +13,9 @@ public abstract class Boot {
 	private String steuerBoardRuderHinten;
 	private int lengthOfBoot;
 	private int leistungBoot;
+	private boolean ruderVorn;
+	private boolean winner;
+	private double streckeMade;
 
 	
 	
@@ -25,12 +29,16 @@ public abstract class Boot {
 			String steuerBoardRuderVorn,
 			String steuerBoardRuderHinten) {
 		this.number = number;
+		this.leistungBoot = leistungBoot;
 		this.backBoardRuderVorn = backBoardRuderVorn;
 		this.backBoardRuderHinten = backBoardRuderHinten;
 		this.bootMitte = bootMitte;
 		this.steuerBoardRuderVorn = steuerBoardRuderVorn;
 		this.steuerBoardRuderHinten = steuerBoardRuderHinten;
 		this.lengthOfBoot = bootMitte.length();
+		this.ruderVorn = true;
+		this.winner = false;
+		this.streckeMade = 0.0;
 	}
 	
 	
@@ -133,9 +141,69 @@ public abstract class Boot {
 		this.leistungBoot = leistungBoot;
 	}
 	
+	public boolean isRuderVorn() {
+		return ruderVorn;
+	}
+
+	public void setRuderVorn(boolean ruderVorn) {
+		this.ruderVorn = ruderVorn;
+	}
+	
+	
+
+	public boolean isWinner() {
+		return winner;
+	}
+
+
+
+	public void setWinner(boolean winner) {
+		this.winner = winner;
+	}
 	
 	
 	
+	public double getStreckeMade() {
+		return streckeMade;
+	}
+
+
+	public void setStreckeMade(double streckeMade) {
+		this.streckeMade = streckeMade;
+	}
+
+
+
+
+	//=======================================================================
+	public void bootEinsetzen(Rennstrecke rennstrecke) {
+		String boatAndTrackStringB = "";
+		String boatAndTrackStringM = "";
+		String boatAndTrackStringS = "";
+		String empty = " ";
+		
+		boatAndTrackStringM = " |" + empty.repeat((this.xPos-1) - this.lengthOfBoot) + this.getBootMitte() + empty.repeat(rennstrecke.getLengthRaceTrack() - (this.getxPos())+1) +"|";
+		if (this.isRuderVorn()) {
+			boatAndTrackStringB = " |" + empty.repeat((this.xPos-1) - this.lengthOfBoot) + this.getBackBoardRuderVorn() + empty.repeat(rennstrecke.getLengthRaceTrack() - (this.getxPos())+1) +"|";
+			boatAndTrackStringS = " |" + empty.repeat((this.xPos-1) - this.lengthOfBoot) + this.getSteuerBoardRuderVorn() + empty.repeat(rennstrecke.getLengthRaceTrack() - (this.getxPos())+1) +"|";
+		} else {
+			boatAndTrackStringB = " |" + empty.repeat((this.xPos-1) - this.lengthOfBoot) + this.getBackBoardRuderHinten() + empty.repeat(rennstrecke.getLengthRaceTrack() - (this.getxPos())+1) +"|";
+			boatAndTrackStringS = " |" + empty.repeat((this.xPos-1) - this.lengthOfBoot) + this.getSteuerBoardRuderHinten() + empty.repeat(rennstrecke.getLengthRaceTrack() - (this.getxPos())+1) +"|";
+		}
+		
+				
+		rennstrecke.setBackboardWater(boatAndTrackStringB);
+		rennstrecke.setMiddleStringBoat(boatAndTrackStringM);
+		rennstrecke.setStarboardWater(boatAndTrackStringS);
+		
+		setRuderVorn(!isRuderVorn());
+				 
+	}
+
+
+
+
+
 	
 	
 	

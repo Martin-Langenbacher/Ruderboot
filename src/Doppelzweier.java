@@ -5,8 +5,8 @@ public class Doppelzweier extends Boot {
 	public Doppelzweier (int number, int leistung) {
 		super(number, leistung,
 				"   / /   ", "   \\ \\   ",
-				"<--o-o-->", "   / /   ",
-				"   \\ \\   ");
+				"<--o-o-->", "   \\ \\   ",
+				"   / /   ");
 	}
 
 }
