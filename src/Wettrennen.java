@@ -10,7 +10,7 @@ public class Wettrennen {
 		int amountOfRuderer = 4; // hier können 2 (Doppelzweier) oder 4 (Vierer) stehen
 		
 				
-		
+		// xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 		// erstelle Boote
 		ArrayList<Boot> boote = new ArrayList<>();
 		for (int i = 0; i < amountOfBoats; i++) {
