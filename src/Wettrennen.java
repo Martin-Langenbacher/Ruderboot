@@ -13,11 +13,12 @@ public class Wettrennen {
 		int amountOfBoats = 0;
 		int lengthOfRacingField = 100;
 		int leistungForBoat;
-		int amountOfRuderer = 1; // hier können 2 (Doppelzweier) oder 4 (Vierer) stehen
+		int amountOfRuderer = 1; // hier können 1er, 2er, 4er oder 8er stehen (neuere Version: Es wird abgefragt)...
 		int zaehler = 0;
+		int k = 0; // auch ein Zähler
 		int ausgleichsfaktor = 1; // damit das Programm nicht abstürzt!
 		String eingabe;
-		double factorForSpeedOfBoat = 30.0;
+		double factorForSpeedOfBoat = 10.0;
 		double laengsteDistanzImRennen = 0.0;
 		
 		
@@ -117,18 +118,62 @@ public class Wettrennen {
 			boote.get(i).bootEinsetzen(rennstrecke1.get(i));
 			
 		}
+		
+		
+		
+		factorForSpeedOfBoat = factorForSpeedOfBoat + 5*amountOfRuderer; //damit alle Boote ungefähr gleich lange benötigen
+		
+		k=6;
+		// Start of the race
+		do {
+			k--;
+			System.out.println(" ");
+			System.out.println(" ");
+			System.out.println(" Countdown: " +k);
+			
+			
+			for (int i = 0; i < amountOfBoats; i++) {
+				if (i == 0) {
+					System.out.println(rennstrecke1.get(i).getRandStringBahn());
+				}
+				System.out.println(rennstrecke1.get(i).getBackboardWater());
+				System.out.println(rennstrecke1.get(i).getMiddleStringBoat());
+				System.out.println(rennstrecke1.get(i).getStarboardWater());
+				if (i == amountOfBoats - 1) {
+					System.out.println(rennstrecke1.get(i).getRandStringBahn());
+				} else {
+					System.out.println(rennstrecke1.get(i).getRandStringMiddle());
+				}	
+			}
+			
+			//slowing down time...
+			Thread.sleep(1000, 0);
+			
+			
+		} while (k>0);
+				
 			
 		
 		// Zeige Rennstrecke
-		int k = 0;
+		k=0;
 		boolean ende = false;
 		
 		do {
 			k++;
-			System.out.println("k: " +k);
+			String goString = ">";
+			//System.out.println("k: " +k);
 			System.out.println(" ");
 			System.out.println(" ");
+			if (k<9) {
+				System.out.println(" >" + goString.repeat(k/2) + " GO! ");
+				//System.out.println(" GO " +goString.repeat(k/2) +">");
+			} else {
+				System.out.println(" ");
+			}
 			
+			
+			
+			// Print Bahn mit Boot
 			for (int i = 0; i < amountOfBoats; i++) {
 				if (i == 0) {
 					System.out.println(rennstrecke1.get(i).getRandStringBahn());
@@ -153,9 +198,8 @@ public class Wettrennen {
 				int streckeGesamt = (int) boote.get(j).getStreckeMade() +ausgleichsfaktor;
 				if (streckeGesamt <= 1) {
 					streckeGesamt = 1;
-					System.out.println("In streckeGesamt gesprugen: " +streckeGesamt);
+					//System.out.println("In streckeGesamt gesprugen: " +streckeGesamt);
 				}
-				
 				
 				
 				
@@ -165,10 +209,6 @@ public class Wettrennen {
 					streckeGesamt = lengthOfRacingField - boote.get(j).getLengthOfBoot() + ausgleichsfaktor;
 					//System.out.println("In streckeGesamt gesprugen: " +streckeGesamt);
 				}
-				
-				
-				
-				
 				
 				
 				boote.get(j).setxPos(boote.get(j).getxPos()+(streckeGesamt - (boote.get(j).getxPos()-boote.get(j).getLengthOfBoot())));
@@ -188,12 +228,10 @@ public class Wettrennen {
 			//slowing down time...
 			Thread.sleep(400, 0);
 			
-			
-			
-			
 		} while (!ende);
 		
 
+		
 		
 		//Who is the winner?
 		for (int j = 0; j < amountOfBoats; j++) {
@@ -207,9 +245,10 @@ public class Wettrennen {
 		
 		
 		//finischer Bild
-		System.out.println("k: THE END!");
 		System.out.println(" ");
 		System.out.println(" ");
+		System.out.println(" THE END!");
+		
 		for (int i = 0; i < amountOfBoats; i++) {
 			if (i == 0) {
 				System.out.println(rennstrecke1.get(i).getRandStringBahn());
