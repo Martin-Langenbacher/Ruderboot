@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class Rennstrecke {
 	
@@ -92,7 +91,7 @@ public class Rennstrecke {
 			String vornUndHinten = "|";
 			String empty = " ";
 			
-			setRandStringBahn(randEinfach + begrenzungPlus + randDoppel.repeat(this.getLengthRaceTrack()) + begrenzungPlus + randEinfach);
+			setRandStringBahn(randDoppel + begrenzungPlus + randDoppel.repeat(this.getLengthRaceTrack()) + begrenzungPlus + randDoppel);
 			setBackboardWater(empty + vornUndHinten + empty.repeat(this.getLengthRaceTrack()) + vornUndHinten + empty);
 			setMiddleStringBoat(empty + vornUndHinten + empty.repeat(this.getLengthRaceTrack()) + vornUndHinten + empty);
 			setStarboardWater(empty + vornUndHinten + empty.repeat(this.getLengthRaceTrack()) + vornUndHinten + empty);

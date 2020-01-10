@@ -15,21 +15,11 @@ public class Wettrennen {
 		int leistungForBoat;
 		int amountOfRuderer = 1; // hier können 2 (Doppelzweier) oder 4 (Vierer) stehen
 		int zaehler = 0;
+		int ausgleichsfaktor = 1; // damit das Programm nicht abstürzt!
 		String eingabe;
-		//int blz = 0;
+		double factorForSpeedOfBoat = 30.0;
+		double laengsteDistanzImRennen = 0.0;
 		
-		/*
-		InputStreamReader isr = new InputStreamReader(System.in);
-		BufferedReader br = new BufferedReader(isr);
-		
-		
-		int kontoNr = 0;
-		int zaehler = 0;
-		String laenderCode = "";
-		String ergebnisIban;
-		
-		
-		*/
 		
 		
 		// Anzahl der Ruderboote.
@@ -54,7 +44,7 @@ public class Wettrennen {
 				while (zaehler == 1) {
 
 					try {
-						System.out.println("Geben Sie die Zahl der Ruderer ein (1, 2 oder 4):");
+						System.out.println("Geben Sie die Zahl der Ruderer ein (1, 2, 4 oder 8):");
 						eingabe = br.readLine();
 						amountOfRuderer = Integer.parseInt(eingabe);
 					}
@@ -65,13 +55,12 @@ public class Wettrennen {
 					}
 					zaehler++;
 				}
-				
-				if (amountOfRuderer != 1 || amountOfRuderer != 2 || amountOfRuderer != 4) {
+								
+				if ((amountOfRuderer != 1) && (amountOfRuderer != 2) && (amountOfRuderer != 4) && (amountOfRuderer != 8)) {
+					System.out.println("Falsche Zahl eingegeben, darum ist die Anzahl der Ruderer auf " +amountOfRuderer + " gesetzt werden.");
 					amountOfRuderer = 4;
 				}
-		
-		
-		
+				
 		
 		
 				
@@ -99,6 +88,10 @@ public class Wettrennen {
 			case 4:
 				boote.add(new Vierer(i, leistungForBoat));
 				break;
+			case 8:
+				boote.add(new Achter(i, leistungForBoat));
+				break;
+
 			default:
 				System.out.println("Leider die falsche Anzahl an Ruderer im Programm!");
 				break;
@@ -117,7 +110,7 @@ public class Wettrennen {
 			rennstrecke1.get(i).rennstreckeErstellen();
 			
 			// Startposition Boot:
-			boote.get(i).setxPos(boote.get(i).getLengthOfBoot()+1);
+			boote.get(i).setxPos(boote.get(i).getLengthOfBoot()+ausgleichsfaktor);
 			boote.get(i).setyPos(boote.get(i).getyPos());
 			
 			// Boote in Rennstrecke einsetzen
@@ -150,31 +143,44 @@ public class Wettrennen {
 				}	
 			}
 			// neue Position von Booten
-			// x+1
 			for (int j = 0; j < amountOfBoats; j++) {
 				
 				double leistungBoot = boote.get(j).getLeistungBoot();
-				double sqrt = Math.sqrt(leistungBoot)/20; //Leistung umgerechnet in Strecke (pro Schritt)
-				boote.get(j).setStreckeMade(sqrt+boote.get(j).getStreckeMade());
-				int streckeGesamt = (int) boote.get(j).getStreckeMade();
+				double sqrtTeilstrecke = Math.sqrt(leistungBoot)/factorForSpeedOfBoat; //Leistung umgerechnet in Strecke (pro Schritt)
 				
-				/*
-				System.out.println(boote.get(j).getStreckeMade());
-				System.out.println(boote.get(j).getLengthOfBoot() + " Länge des Bootes...");
-				System.out.println(leistungBoot);
-				System.out.println(sqrt);
-				System.out.println(streckeGesamt);
-				System.out.println("x-Pos: " + boote.get(j).getxPos());
-				*/
+				//streckeGesamt muss am Anfang immer mindestens 1 sein!
+				boote.get(j).setStreckeMade(sqrtTeilstrecke+boote.get(j).getStreckeMade());
+				int streckeGesamt = (int) boote.get(j).getStreckeMade() +ausgleichsfaktor;
+				if (streckeGesamt <= 1) {
+					streckeGesamt = 1;
+					System.out.println("In streckeGesamt gesprugen: " +streckeGesamt);
+				}
+				
+				
+				
+				
+				int varZwischen = streckeGesamt + boote.get(j).getLengthOfBoot();
+				//System.out.println("streckeGesamt + länge des Bootes: " +varZwischen);
+				if (streckeGesamt + boote.get(j).getLengthOfBoot() >= lengthOfRacingField+ausgleichsfaktor) {
+					streckeGesamt = lengthOfRacingField - boote.get(j).getLengthOfBoot() + ausgleichsfaktor;
+					//System.out.println("In streckeGesamt gesprugen: " +streckeGesamt);
+				}
+				
+				
+				
+				
+				
 				
 				boote.get(j).setxPos(boote.get(j).getxPos()+(streckeGesamt - (boote.get(j).getxPos()-boote.get(j).getLengthOfBoot())));
 				boote.get(j).bootEinsetzen(rennstrecke1.get(j));
-				//System.out.println("x-Pos: " + boote.get(j).getxPos());
-				//System.out.println("Länge Boot: " + boote.get(j).getLengthOfBoot());
-				//boote.get(j).bootEinsetzen(rennstrecke1.get(j));
 				
-				if (boote.get(j).getxPos() == lengthOfRacingField+0) {
+				//boote.get(i).getStreckeMade()
+				
+				if (boote.get(j).getStreckeMade() >= lengthOfRacingField - boote.get(j).getLengthOfBoot()){	
 					boote.get(j).setWinner(true);
+					if (laengsteDistanzImRennen < boote.get(j).getStreckeMade()) {
+						laengsteDistanzImRennen = boote.get(j).getStreckeMade();
+					}
 					ende = true;
 				}				
 			}
@@ -186,7 +192,17 @@ public class Wettrennen {
 			
 			
 		} while (!ende);
-		//} while (k<lengthOfRacingField-(boote.get(1).getLengthOfBoot()));
+		
+
+		
+		//Who is the winner?
+		for (int j = 0; j < amountOfBoats; j++) {
+			if (boote.get(j).getStreckeMade() >= laengsteDistanzImRennen) {
+				boote.get(j).setWinner(true);
+			} else {
+				boote.get(j).setWinner(false);
+			}
+		}
 		
 		
 		
@@ -212,88 +228,7 @@ public class Wettrennen {
 			} else {
 				System.out.println(rennstrecke1.get(i).getRandStringMiddle());
 			}	
-		}
-		
-	
-	
-		
-		
-		/*
-		// Zeige Aquarium:
-				
-				int k = 0;
-				
-				do {
-					k++;
-					//System.out.println("k: " +k);
-					System.out.println(" ");
-					System.out.println(" ");
-					System.out.println(" ");
-					
-					//Zeige Aquarium --> Strings...
-					for (int i = aquariumHeight; i >= 0; i--) {
-						System.out.println(myFirstAquarium.get(i).getAquariumString());
-					}
-					
-					
-					//Hier baue ich.....
-					for (int i = 0; i < numberOfFishes; i++) {
-						
-						//System.out.println(fische.get(i).getxPos());
-						
-						if (fische.get(i).getxPos() < aquariumLength - fische.get(i).getLengthOfFish() && fische.get(i).isDirectionRight()) {
-							fische.get(i).setxPos(fische.get(i).getxPos()+1);
-						} else if (fische.get(i).getxPos() > 1 && !(fische.get(i).isDirectionRight())){
-							fische.get(i).setxPos(fische.get(i).getxPos()-1);
-						} else {
-							fische.get(i).setDirectionRight(!fische.get(i).isDirectionRight());
-						}
-					}
-						
-						
-						for (int i = 0; i < numberOfFishes; i++) {
-							fische.get(i).fillAquarium(myFirstAquarium.get(i+1));
-						}
-						
-						
-						//fische.get(i).setxPos(fische.get(i).getxPos()+1);
-						//fische.get(i).setxPos(i);
-						//System.out.println(fische.get(i).getxPos());
-						//fische.get(i).fishSwim2(myFirstAquarium);
-						//fische.get(i).setxPos(random_int);
-						
-						//fische.get(i).fishSwim(myFirstAquarium.get(i+1));
-					
-					
-					
-					
-					
-					//Hier ist das Ende von bauen...
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					//workingFish.fishSwim(myFirstAquarium);
-					
-					// fish up or down ?
-					//workingFish.fishUpOrDown(myFirstAquarium);
-					
-					
-					
-					
-					//slowing down time...
-					Thread.sleep(100, 0);
-					
-				} while (k < 1500);
-				
-				
-		*/
-		
+		}		
 		
 	}
 
