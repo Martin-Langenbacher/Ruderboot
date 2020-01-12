@@ -233,12 +233,13 @@ public class Wettrennen {
 				
 				double leistungBoot = boote.get(j).getLeistungBoot();
 				double sqrtTeilstrecke = Math.sqrt(leistungBoot)/factorForSpeedOfBoat; //Leistung umgerechnet in Strecke (pro Schritt)
-				
-				System.out.println("Strecke Made: " + boote.get(j).getStreckeMade());
-				System.out.println("sqrtTeilstrecke: " +sqrtTeilstrecke);
+				double teilstreckeMitFaktor = sqrtTeilstrecke * boote.get(j).luckFaktor();
+			
+				//System.out.println("Strecke Made: " + boote.get(j).getStreckeMade());
+				//System.out.println("sqrtTeilstrecke: " +sqrtTeilstrecke);
 				
 				//streckeGesamt muss am Anfang immer mindestens 1 sein!
-				boote.get(j).setStreckeMade(sqrtTeilstrecke+boote.get(j).getStreckeMade());
+				boote.get(j).setStreckeMade(teilstreckeMitFaktor + boote.get(j).getStreckeMade());
 				int streckeGesamt = (int) boote.get(j).getStreckeMade() +ausgleichsfaktor;
 				if (streckeGesamt <= 1) {
 					streckeGesamt = 1;

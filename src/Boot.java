@@ -262,14 +262,19 @@ public boolean isSortierSchalter() {
 			
 			//descending order
 			//return comparePosition - this.leistungBoot;
-
 		}
 		
-		
-		
-		
-		
 	}
+
+
+
+//================================================================================
+	public double luckFaktor() {
+	
+		return 1.0;
+		
+	};
+	
 
 	
 		
