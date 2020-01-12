@@ -1,10 +1,11 @@
 
-public abstract class Boot {
+public abstract class Boot implements Comparable<Boot>{
 	
 	//attributes
 	private int number;
+	private String bootName;
 	private int xPos;
-	private int yPos;
+	private int bahnNummer;
 	private String backBoardRuderVorn;
 	private String backBoardRuderHinten;
 	private String bootMitte;
@@ -15,19 +16,22 @@ public abstract class Boot {
 	private boolean ruderVorn;
 	private boolean winner;
 	private double streckeMade;
+	private int position;
+	private boolean sortierSchalter;
 
 	
 	
 	
 	
 	// constructor
-	public Boot(int number, int leistungBoot,
+	public Boot(int number, String bootName, int leistungBoot,
 			String backBoardRuderVorn,
 			String backBoardRuderHinten,
 			String bootMitte,
 			String steuerBoardRuderVorn,
 			String steuerBoardRuderHinten) {
 		this.number = number;
+		this.bootName = bootName;
 		this.leistungBoot = leistungBoot;
 		this.backBoardRuderVorn = backBoardRuderVorn;
 		this.backBoardRuderHinten = backBoardRuderHinten;
@@ -38,6 +42,9 @@ public abstract class Boot {
 		this.ruderVorn = true;
 		this.winner = false;
 		this.streckeMade = 0.0;
+		this.position = 0;
+		this.bahnNummer = number + 1;
+		this.sortierSchalter = false;
 	}
 	
 	
@@ -54,6 +61,19 @@ public abstract class Boot {
 
 	public void setNumber(int number) {
 		this.number = number;
+	}
+
+	
+
+	public String getBootName() {
+		return bootName;
+	}
+
+
+
+
+	public void setBootName(String bootName) {
+		this.bootName = bootName;
 	}
 
 
@@ -73,15 +93,13 @@ public abstract class Boot {
 
 
 
-	public int getyPos() {
-		return yPos;
+	public int getbahnNummer() {
+		return bahnNummer;
 	}
-
-
-
-
-	public void setyPos(int yPos) {
-		this.yPos = yPos;
+	
+	
+	public void setBahnNummer(int bahnNummer) {
+		this.bahnNummer = bahnNummer;
 	}
 
 
@@ -172,6 +190,28 @@ public abstract class Boot {
 	}
 
 
+	public int getPosition() {
+		return position;
+	}
+
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+
+public boolean isSortierSchalter() {
+		return sortierSchalter;
+	}
+
+
+
+
+	public void setSortierSchalter(boolean sortierSchalter) {
+		this.sortierSchalter = sortierSchalter;
+	}
+
+
 
 
 	//=======================================================================
@@ -199,10 +239,41 @@ public abstract class Boot {
 				 
 	}
 
+	
 
+//=======================================================================
+	public int compareTo(Boot compareBoot) {
+		
+		if (this.sortierSchalter == false) {
+			
+			int comparePosition = ((Boot) compareBoot).getLeistungBoot();
+			
+			//ascending order
+			//return this.leistungBoot - compareQuantity;
+			
+			//descending order
+			return comparePosition - this.leistungBoot;
+		} else {
+			
+			int compareBahnen = ((Boot) compareBoot).getbahnNummer();
+			
+			//ascending order;-)");
+			return this.bahnNummer - compareBahnen;
+			
+			//descending order
+			//return comparePosition - this.leistungBoot;
 
+		}
+		
+		
+		
+		
+		
+	}
 
-
+	
+		
+		
 	
 	
 	

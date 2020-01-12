@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class Wettrennen {
 
@@ -15,9 +17,11 @@ public class Wettrennen {
 		int leistungForBoat;
 		int amountOfRuderer = 1; // hier können 1er, 2er, 4er oder 8er stehen (neuere Version: Es wird abgefragt)...
 		int zaehler = 0;
+		int bootNummerZaehler = 0;
 		int k = 0; // auch ein Zähler
 		int ausgleichsfaktor = 1; // damit das Programm nicht abstürzt!
 		String eingabe;
+		String bootName;
 		double factorForSpeedOfBoat = 10.0;
 		double laengsteDistanzImRennen = 0.0;
 		
@@ -58,13 +62,12 @@ public class Wettrennen {
 				}
 								
 				if ((amountOfRuderer != 1) && (amountOfRuderer != 2) && (amountOfRuderer != 4) && (amountOfRuderer != 8)) {
-					System.out.println("Falsche Zahl eingegeben, darum ist die Anzahl der Ruderer auf " +amountOfRuderer + " gesetzt werden.");
 					amountOfRuderer = 4;
+					System.out.println("Falsche Zahl eingegeben, darum ist die Anzahl der Ruderer auf " +amountOfRuderer + " gesetzt worden.");
 				}
 				
 		
-		
-				
+			
 		// erstelle Boote
 		ArrayList<Boot> boote = new ArrayList<>();
 		for (int i = 0; i < amountOfBoats; i++) {
@@ -79,18 +82,24 @@ public class Wettrennen {
 			}
 			//System.out.println("Summe: " +leistungForBoat);
 			
+			bootNummerZaehler = bootNummerZaehler +1;
+			
 			switch(amountOfRuderer) {
 			case 1:
-				boote.add(new Einer(i, leistungForBoat));
+				bootName = "Einer " + bootNummerZaehler;
+				boote.add(new Einer(i, bootName, leistungForBoat));
 				break;
 			case 2:
-				boote.add(new Doppelzweier(i, leistungForBoat));
+				bootName = "Doppel " + bootNummerZaehler;
+				boote.add(new Doppelzweier(i, bootName, leistungForBoat));
 				break;
 			case 4:
-				boote.add(new Vierer(i, leistungForBoat));
+				bootName = "Vierer " + bootNummerZaehler;
+				boote.add(new Vierer(i, bootName, leistungForBoat));
 				break;
 			case 8:
-				boote.add(new Achter(i, leistungForBoat));
+				bootName = "Achter " + bootNummerZaehler;
+				boote.add(new Achter(i, bootName, leistungForBoat));
 				break;
 
 			default:
@@ -98,6 +107,38 @@ public class Wettrennen {
 				break;
 			}
 		}
+		
+		
+		// Position zuordnen (mit sortieren !!!)
+		Collections.sort(boote);
+		
+		zaehler = 0;
+		for (Boot temp : boote) {
+			++zaehler;
+			temp.setPosition(zaehler);
+		}
+		
+
+		
+		// Sortier-Schalter auf True, da Sortiert wurde:
+		for (int i = 0; i < amountOfBoats; i++) {
+			boote.get(i).setSortierSchalter(true);
+			}
+		
+
+		// Zurücksortiert nach Bahn...
+		Collections.sort(boote);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		
 		// erstelle Rennstrecke
@@ -112,7 +153,7 @@ public class Wettrennen {
 			
 			// Startposition Boot:
 			boote.get(i).setxPos(boote.get(i).getLengthOfBoot()+ausgleichsfaktor);
-			boote.get(i).setyPos(boote.get(i).getyPos());
+			boote.get(i).setBahnNummer(boote.get(i).getbahnNummer());
 			
 			// Boote in Rennstrecke einsetzen
 			boote.get(i).bootEinsetzen(rennstrecke1.get(i));
@@ -179,7 +220,7 @@ public class Wettrennen {
 					System.out.println(rennstrecke1.get(i).getRandStringBahn());
 				}
 				System.out.println(rennstrecke1.get(i).getBackboardWater());
-				System.out.println(rennstrecke1.get(i).getMiddleStringBoat());
+				System.out.println(rennstrecke1.get(i).getMiddleStringBoat() + " " + boote.get(i).getPosition() + ".");
 				System.out.println(rennstrecke1.get(i).getStarboardWater());
 				if (i == amountOfBoats - 1) {
 					System.out.println(rennstrecke1.get(i).getRandStringBahn());
@@ -193,29 +234,30 @@ public class Wettrennen {
 				double leistungBoot = boote.get(j).getLeistungBoot();
 				double sqrtTeilstrecke = Math.sqrt(leistungBoot)/factorForSpeedOfBoat; //Leistung umgerechnet in Strecke (pro Schritt)
 				
+				System.out.println("Strecke Made: " + boote.get(j).getStreckeMade());
+				System.out.println("sqrtTeilstrecke: " +sqrtTeilstrecke);
+				
 				//streckeGesamt muss am Anfang immer mindestens 1 sein!
 				boote.get(j).setStreckeMade(sqrtTeilstrecke+boote.get(j).getStreckeMade());
 				int streckeGesamt = (int) boote.get(j).getStreckeMade() +ausgleichsfaktor;
 				if (streckeGesamt <= 1) {
 					streckeGesamt = 1;
-					//System.out.println("In streckeGesamt gesprugen: " +streckeGesamt);
 				}
 				
 				
-				
+				// Abfrage START
 				int varZwischen = streckeGesamt + boote.get(j).getLengthOfBoot();
-				//System.out.println("streckeGesamt + länge des Bootes: " +varZwischen);
 				if (streckeGesamt + boote.get(j).getLengthOfBoot() >= lengthOfRacingField+ausgleichsfaktor) {
 					streckeGesamt = lengthOfRacingField - boote.get(j).getLengthOfBoot() + ausgleichsfaktor;
-					//System.out.println("In streckeGesamt gesprugen: " +streckeGesamt);
 				}
 				
-				
+				//x-Position SET...
 				boote.get(j).setxPos(boote.get(j).getxPos()+(streckeGesamt - (boote.get(j).getxPos()-boote.get(j).getLengthOfBoot())));
+				
 				boote.get(j).bootEinsetzen(rennstrecke1.get(j));
 				
-				//boote.get(i).getStreckeMade()
 				
+				//Abfrage, falls rechter Rand...!
 				if (boote.get(j).getStreckeMade() >= lengthOfRacingField - boote.get(j).getLengthOfBoot()){	
 					boote.get(j).setWinner(true);
 					if (laengsteDistanzImRennen < boote.get(j).getStreckeMade()) {
